@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Document</title>
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.9.0/axios.min.js"
+            integrity="sha512-FPlUpimug7gt7Hn7swE8N2pHw/+oQMq/+R/hH/2hZ43VOQ+Kjh25rQzuLyPz7aUWKlRpI7wXbY6+U3oFPGjPOA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    ></script>
+</head>
+<body>
+<button id="get">Get요청</button>
+<button id="post">Post요청</button>
+<ul>
+    <li data-user-name="김길동" data-user-age="20">김길동</li>
+    <li data-user-name="홍길동" data-user-age="30">홍길동</li>
+    <li data-user-name="이길동" data-user-age="40">이길동</li>
+</ul>
+</body>
+</html>
+<script>
+    const li1 = document.querySelector('ul').children[0];
+    console.log('li1', li1.dataset);
+    console.log('li1', li1.dataset.userName);
+    console.log('li1', li1.dataset.userAge);
+    const li2 = document.querySelector('ul').children[1];
+    console.log('li2', li2.dataset);
+    console.log('li2', li2.dataset.userName);
+    console.log('li2', li2.dataset.userAge);
+    const li3 = document.querySelector('ul').children[2];
+    console.log('li3', li3.dataset);
+    console.log('li3', li3.dataset.userName);
+    console.log('li3', li3.dataset.userAge);
+
+    document.getElementById("get").addEventListener("click", () => {
+        axios.get("http://127.0.0.1:8005").then((res) => {
+            console.log(res);
+        });
+    });
+    document.getElementById("post").addEventListener("click", () => {
+        axios.post("http://127.0.0.1:8005", {
+            name: '홍길동',
+            age: 18,
+        })
+            .then((res) => {
+                console.log(res);
+            });
+    });
+</script>
