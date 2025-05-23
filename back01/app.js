@@ -1,5 +1,6 @@
 const cors = require('cors');
 const pool = require("./db");
+const {supabase} = require("./supadb");
 const express = require("express"); // http모듈 확장한 프레임워크
 // app express 객체 생성
 const app = express();
@@ -22,6 +23,13 @@ app.use((req, res, next) => {
     next();
 });
 app.use(cors());
+
+app.get('/supauser', async (req, res, next) => {
+    const {data,error} = await supabase.from('users').select();
+    console.log('data', data);
+    console.log('error', error);
+    res.json(data);
+})
 
 app.get('/setCookie', (req, res, next) => {
     console.log('test');
