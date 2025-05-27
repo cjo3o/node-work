@@ -26,7 +26,7 @@ app.use(cors());
 // 해당하는 파일이 있을때는 res.sendFile(), next()
 app.use("/images", express.static(path.join(__dirname, "public")));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 app.use(mymid);
@@ -36,9 +36,35 @@ app.get("/", (req, res, next) => {
     res.send("클라이언트한테보내기");
 });
 
-app.post("/subscribe",(req,res,next)=>{
-    console.log(req.body);
-    res.send('구독성공');
+//서버 시작 누르기 되면 배열 값 삭제 새로고침
+//배열이기 때문에 서버 재시작하면 프론트 정보 사라짐
+
+const ss = [];
+
+app.post("/subscribe", (req, res, next) => {
+    ss.push({ sub: req.body });
+    console.log(ss);
+    res.send("구독성공");
+});
+
+app.get('/send', async (req, res, next) => {
+    try {
+        const payload = JSON.stringify({
+            title: "new알림",
+            body: "미세지가 좀..",
+            url: "https://front02-cy6dr2s4w-cjo3os-projects.vercel.app/"
+        });
+        const notifications = ss.map((item) => {
+            console.log(item);
+            return webpush.sendNotification(item.sub, payload);
+        })
+        await Promise.all(notifications);
+    } catch (e) {
+        console.error(e);
+        res.json({
+            message: "알림 전송 실패"
+        })
+    }
 })
 
 app.listen(8080, () => {
