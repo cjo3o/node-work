@@ -10,7 +10,7 @@ webpush.setVapidDetails(
 
 const cors = require("cors");
 
-// const pool = require("./db");
+const pool = require("./db");
 const mymid = require("./mymiddle");
 const express = require("express");
 const path = require("path");
@@ -42,6 +42,11 @@ app.get("/", (req, res, next) => {
 const ss = [];
 
 app.post("/subscribe", (req, res, next) => {
+    console.log(req.body);
+    console.log(req.body.sub;
+    console.log(req.body.sub.endpoint);
+    console.log(req.body.sub.p256dn);
+    console.log(req.body.city);
     ss.push({ sub: req.body });
     console.log(ss);
     res.send("구독성공");
