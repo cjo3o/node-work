@@ -68,7 +68,7 @@ app.get("/send", async (req, res, next) => {
         const payload = JSON.stringify({
             title: "new 알림",
             body: "미세먼지가.. 좀... 버스가 몇분뒤 도착...하였습니다.",
-            url: "https://front02-oasg9q11z-cjo3os-projects.vercel.app/"
+            url: "https://front02-85nmeklum-cjo3os-projects.vercel.app/"
         });
         const notifications = result[0].map(item => {
             console.log('item = ', item);
