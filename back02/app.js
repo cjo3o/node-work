@@ -41,34 +41,53 @@ app.get("/", (req, res, next) => {
 
 const ss = [];
 
-app.post("/subscribe", (req, res, next) => {
-    console.log(req.body);
-    console.log(req.body.sub);
-    console.log(req.body.sub.endpoint);
-    console.log(req.body.sub.p256dn);
-    console.log(req.body.city);
-    ss.push({ sub: req.body });
-    console.log(ss);
-    res.send("구독성공");
+app.post("/subscribe", async (req, res, next) => {
+    // console.log(req.body);
+    // console.log(req.body.sub);
+    // console.log(req.body.sub.endpoint);
+    // console.log(req.body.sub.p256dn);
+    // console.log(req.body.city);
+
+    const conn = await pool.getConnection();
+    const sql = "insert into subscriptions (endpoint, p256dh, auth, city) values (?,?,?,?)";
+    const result = await conn.execute(sql, [req.body.sub.endpoint, req.body.sub.keys.p256dh, req.body.sub.keys.auth, req.body.city]);
+
+    conn.release();
+    res.send("구독성공" + result[0]);
 });
 
-app.get("/send", async(req, res, next) => {
+app.get("/send", async (req, res, next) => {
     try {
+        const {city} = req.query;
+
+        const conn = await pool.getConnection();
+        const sql = "select * from subscriptions where city = ?";
+        const result = await conn.execute(sql, [city]);
+        console.log(result);
+
         const payload = JSON.stringify({
-            title:"new 알림",
-            body:"미세먼지가.. 좀... 버스가 몇분뒤 도착...하였습니다.",
-            url:"https://front02-1o3ijwqtm-cjo3os-projects.vercel.app/"
+            title: "new 알림",
+            body: "미세먼지가.. 좀... 버스가 몇분뒤 도착...하였습니다.",
+            url: "https://front02-oasg9q11z-cjo3os-projects.vercel.app/"
         });
-        const notifications = ss.map( item =>{
-            console.log('item = ',item);
-            return webpush.sendNotification(item.sub,payload);
+        const notifications = result[0].map(item => {
+            console.log('item = ', item);
+            const temp = {
+                endpoint: item.endpoint,
+                expirationTime: null,
+                keys: {
+                    p256dh: item.p256dh,
+                    auth: item.auth,
+                },
+            };
+            return webpush.sendNotification(temp, payload);
         })
         console.log("notifications = ", notifications);
         await Promise.all(notifications);
-        res.json({ message: "푸시 알람 전송 성공" });
+        res.json({message: "푸시 알람 전송 성공"});
     } catch (e) {
         console.log(e);
-        res.json({ message: "푸시 알람 전송 실패" });
+        res.json({message: "푸시 알람 전송 실패"});
     }
 });
 
