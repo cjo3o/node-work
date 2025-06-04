@@ -1,10 +1,20 @@
 const express = require('express');
 const path = require('path');
+const nunjucks = require('nunjucks');
+const multer = require('multer');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const expressSession = require('express-session');
 const cors = require('cors');
+const fs = require('fs');
+
+try {
+    fs.readdirSync("uploads");
+} catch (e) {
+    console.error("uploads 폴더가 없어서 uploads 폴더 생성합니다.");
+    fs.mkdirSync("uploads");
+}
 
 dotenv.config();
 
@@ -13,10 +23,26 @@ dotenv.config();
 
 const app = express();
 
+app.use((req, res, next) => {
+    console.log("그 다음 미들웨어로 진행");
+    next();
+}, (req,res,next) => {
+    console.log("다음 미들웨어");
+    next()
+}, (req, res, next) => {
+    console.log("다음 미들웨어");
+    next()
+})
+
 app.use(cors({
     origin: "http://localhost:5174",
     credentials: true,
 }));
+
+// 미들웨어 사용 다른 방법
+app.use((req,res,next) => {
+    morgan()(req,res,next);
+});
 
 // 로그남기기
 app.use(morgan('dev'));
@@ -37,6 +63,57 @@ app.use(expressSession({
 }))
 
 app.set('port', 4000);
+app.set('view engine', 'html');
+
+nunjucks.configure('views', {
+    express: app,
+    watch: true
+});
+
+const upload = multer({
+    storage: multer.diskStorage({
+        destination: (req, file, done) => {
+            done(null, 'uploads'); //파일이 업로드 되면 uplodas경로에 저장하겠다.
+        },
+        filename: (req, file, done) => {
+            const ext = path.extname(file.originalname);
+            // 원래 파일명 + 현재시간 + 확장자로 설정하겠다.
+            done(null, path.basename(file.originalname, ext) + Date.now() + ext);
+        },
+    }),
+    limits: { fileSize: 1024 * 1024 * 30}
+})
+
+app.get("/", (req, res, next) => {
+    console.log(req.body);
+    console.log(req.query);
+    console.log("/경로 요청");
+
+    // 데이터 베이스에 가서
+    res.locals.member = [{
+        name: "홍길동",
+        age: 20
+    }, {
+        name: "홍길동",
+        age: 20
+    }, {
+        name: "홍길동",
+        age: 20
+    }]
+
+    res.locals.data = "새로운 데이터";
+    res.locals.aaa = "aaa데이터";
+    res.render("index", {title: "제목"});
+});
+
+app.get("/multipart", (req, res, next) => {
+    res.render("multipart");
+});
+
+app.post("/upload",upload.single('image'), (req, res, next) => {
+    console.log(req.file, req.body);
+    res.send("저장성공");
+})
 
 app.post('/login', (req, res,next) => {
     console.log(req.body);

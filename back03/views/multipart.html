@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<h1>multipart</h1>
+<p>여기에서 파일 업로드를 할 수 있습니다.</p>
+<div>
+    <h1>파일 한개 올리기</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="image">
+        <input type="text" name="title">
+        <button type="submit">파일업로드</button>
+    </form>
+    <h1>파일 여러개 올리기</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="many" multiple>
+        <input type="text" name="title">
+        <button type="submit">파일업로드</button>
+    </form>
+</div>
+</body>
+</html>

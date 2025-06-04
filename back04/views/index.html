@@ -1,0 +1,37 @@
+{% set aa="aa입니다" %}
+{% set bb="bb입니다" %}
+<!DOCTYPE html>
+<html lang="en">
+  { $include 'header.html' % }
+  <body>
+    <h1>INDEX - {{title}}</h1>
+    <h1>myname - {{myname}}</h1>
+    <div>
+      <h1>파일 한개 올리기</h1>
+      <!-- <form action="/upload" method="post" enctype="multipart/form-data"> -->
+      <input type="file" name="image" id="file"/>
+      <input type="text" name="title" id="title"/>
+      <button type="button" id="upload-btn">파일업로드</button>
+      <!-- </form> -->
+    </div>
+
+    <script>
+      const $btn = document.getElementById("upload-btn");
+      const fileInput = document.getElementById("file");
+      const textInput = document.getElementById('title');
+
+      $btn.addEventListener("click", async () => {
+        // 페이지 이동 없이 파일 업로드 하는 방법
+        const formData = new FormData();
+        formData.append("image", fileInput.files[0]);
+        formData.append("title", textInput.value);
+        const result = await axios.post("/upload", formData, {
+          headers: {
+            "Content-type": "multitpart/form-data",
+          },
+        });
+        console.log(result);
+      });
+    </script>
+  </body>
+</html>
