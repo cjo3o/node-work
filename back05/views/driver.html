@@ -1,0 +1,34 @@
+{% extends "layout.html"%}
+{% block content %}
+<h1>기사</h1>
+<div>
+    {% for item in data %}
+    예약한 사람 {{loop.index}}
+    <div>
+        <ul>
+            <li>고객명 {{ item.name }}</li>
+            <li>고객전화번호 {{ item.tel }}</li>
+            <li>고객이메일 {{ item.email }}</li>
+            <li>제빙기 청소할 주소 {{ item.addr }}</li>
+        </ul>
+        <button class="pick" type="button" data-item-res="{{item.res_no}}">내ㅔ가함</button>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    const pickArray = document.querySelectorAll(".pick");
+    pickArray.forEach(pick => {
+        pick.addEventListener("click", async () => {
+            console.log(pick.dataset.itemRes + "배송할예정");
+
+            const result = await axios.post("http://localhost:4001/driver", {
+
+            })
+            console.log(result);
+        })
+    })
+</script>
+{% endblock %}
