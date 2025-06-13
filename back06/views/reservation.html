@@ -1,0 +1,145 @@
+{% extends 'layout.html' %}
+{% block style %}
+<style>
+    .reservation-card {
+        max-width: 700px;
+        margin: 30px auto;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .reservation-title {
+        font-weight: bold;
+        color: #0d6efd;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="card reservation-card">
+        <div class="card-body">
+            <h2 class="card-title reservation-title mb-4">예약하기</h2>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="name" class="form-label">고객명</label>
+                    <input type="text" class="form-control" id="name" placeholder="김길동">
+                </div>
+                <div class="col-md-6">
+                    <label for="tel" class="form-label">전화번호</label>
+                    <input type="tel" class="form-control" id="tel" name="tel" value="010-9946-6266" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">이메일</label>
+                    <input type="email" class="form-control" id="email" name="email" value="dron512@naver.com" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="addr" class="form-label">주소</label>
+                    <input type="text" class="form-control" id="addr" name="addr" value="대구 달서구" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="date" class="form-label">예약날짜</label>
+                    <input type="date" class="form-control" id="date" name="date" value="2025-06-20" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="time" class="form-label">시간</label>
+                    <select class="form-select" id="time" name="time" required>
+                        <option value="">시간 선택</option>
+                        <option value="오전 10시 ~ 오후 1시" selected>오전 10시 ~ 오후 1시</option>
+                        <option value="오후 2시 ~ 오후 5시">오후 2시 ~ 오후 5시</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="model" class="form-label">모델</label>
+                    <input type="text" class="form-control" id="model" name="model" value="ㅅ삼성" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="capacity" class="form-label">용량</label>
+                    <select class="form-select" id="capacity" name="capacity" required>
+                        <option value="">용량 선택</option>
+                        <option value="1" selected>1톤</option>
+                        <option value="2">2톤</option>
+                        <option value="3">3톤</option>
+                        <option value="4">4톤</option>
+                        <option value="5">5톤</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="service" class="form-label">서비스</label>
+                    <select class="form-select" id="service" name="service" required>
+                        <option value="">서비스 선택</option>
+                        <option value="청소" selected>청소</option>
+                        <option value="수리">수리</option>
+                        <option value="청소+수리">청소+수리</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="remark" class="form-label">비고</label>
+                    <textarea class="form-control" id="remark" name="remark" rows="1">ㅋㅋㅋㅋ</textarea>
+                </div>
+            </div>
+            <div class="d-grid mt-4">
+                <button class="btn btn-primary btn-lg" id="save">예약하기</button>
+            </div>
+        </div>
+    </div>
+    <h2 class="mt-5 mb-3">예약내역</h2>
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead class="table-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">이메일</th>
+                <th scope="col">이름</th>
+                <th scope="col">서비스</th>
+                <th scope="col">전화번호</th>
+                <th scope="col">가격</th>
+                <th scope="col">상태</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in data %}
+            <tr>
+                <th scope="row">{{loop.index}}</th>
+                <td>{{item.email}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.service}}</td>
+                <td>{{item.tel}}</td>
+                <td>{{item.payment_amount}}원</td>
+                <td><button class="pay btn btn-primary" data-res-no="{{item.res_no}}">{{item.status}}</button></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    document.querySelectorAll('.pay').forEach((el) => {
+        el.addEventListener('click', () => {
+            console.log(el);
+            console.log(el.dataset.resNo);
+            location.href = '/pay/checkout?resNo=' + el.dataset.resNo;
+        })
+    })
+    document.getElementById('save').addEventListener('click', async () => {
+        const formData = {
+            name: document.getElementById('name').value,
+            tel: document.getElementById('tel').value,
+            email: document.getElementById('email').value,
+            addr: document.getElementById('addr').value,
+            date: document.getElementById('date').value,
+            time: document.getElementById('time').value,
+            model: document.getElementById('model').value,
+            capacity: document.getElementById('capacity').value,
+            service: document.getElementById('service').value,
+            remark: document.getElementById('remark').value
+        };
+
+        const result = await axios.post('http://localhost:4002/reservation', formData);
+        console.log(result.data);
+        if (result.data === 'success') {
+            alert('예약성공');
+        }
+    });
+</script>
+{% endblock %}

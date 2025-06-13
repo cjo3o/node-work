@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block style %}
+{% endblock %}
+{% block content %}
+<h1>성공적으로 결제하였습니다.</h1>
+<a href="/reservation">예약내역목록</a>
+<div>
+    <ul>
+        <li>예약번호:{{reservation.res_no}}</li>
+        <li>고객명:{{reservation.name}}</li>
+        <li>이메일:{{reservation.email}}</li>
+        <li>주소:{{reservation.addr}}</li>
+    </ul>
+</div>
+{% endblock %}
+{% block script %}
+{% endblock %}

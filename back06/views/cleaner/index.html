@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+{% block style %}
+{% endblock %}
+{% block content %}
+<h1>Cleaner</h1>
+<h2 class="mt-5 mb-3">예약완료 및 결제한 내역</h2>
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead class="table-light">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">이메일</th>
+            <th scope="col">이름</th>
+            <th scope="col">서비스</th>
+            <th scope="col">고객전화번호</th>
+            <th scope="col">가격</th>
+            <th scope="col">상태</th>
+            <th scope="col">###</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in reservation %}
+        <tr>
+            <th scope="row">{{loop.index}}</th>
+            <td>{{item.email}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.service}}</td>
+            <td>{{item.tel}}</td>
+            <td>{{item.payment_amount}}원</td>
+            <td>{{item.status}}</td>
+            <td><button class="pay btn btn-primary" data-res-no="{{item.res_no}}">청소접수</button></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+{% block script %}
+{% endblock %}
