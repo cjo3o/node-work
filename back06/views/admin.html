@@ -1,0 +1,67 @@
+{% extends 'layout.html' %}
+{% block style %}
+{% endblock %}
+{% block content %}
+<h1>관리자페이지</h1>
+<div class="container">
+    <h1>청소기사 등록</h1>
+    <form action="" method="post">
+        <div>
+            <label for="name" class="my-2">
+                이름
+            </label>
+            <input type="text" name="name" class="form-control" id="name" value="홍길동"/>
+        </div>
+        <div>
+            <label for="phone" class="my-2">
+                연락처
+            </label>
+            <input type="text" name="phone" class="form-control" id="phone" value="010-1234-5611"/>
+        </div>
+        <div>
+            <label for="email" class="my-2">
+                이메일
+            </label>
+            <input type="text" name="email" class="form-control" id="email" value="aaa@naver.com"/>
+        </div>
+        <div>
+            <label for="addr" class="my-2">
+                주소
+            </label>
+            <input type="text" name="addr" class="form-control" id="addr" value="대구 달서구"/>
+        </div>
+        <div>
+            <label for="mypicture" class="my-2">
+                사진
+            </label>
+            <input type="file" name="mypicture" class="form-control" id="mypicture" value="대구 달서구"/>
+        </div>
+        <div>
+            <button class="btn btn-primary">
+                저장
+            </button>
+        </div>
+    </form>
+    <div>
+        <h1>청소기사목록</h1>
+        <table class="table">
+            <tr>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>연락처</th>
+                <th>주소</th>
+            </tr>
+            {% for item in cleaners %}
+            <tr>
+                <td>{{item.name}}</td>
+                <td>{{item.email}}</td>
+                <td>{{item.phone}}</td>
+                <td>{{item.address}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+{% endblock %}

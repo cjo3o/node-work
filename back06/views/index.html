@@ -6,6 +6,12 @@
 <div>
     <p>안녕하세요 배송 및 청소 및 수리 가능합니다.</p>
 </div>
+{% if user %}
+<span>이름 {{user.name}}</span>
+<span>연락처 {{user.phone}}</span>
+<span>이메일 {{user.email}}</span>
+<span>주소 {{user.address}}</span>
+{% endif %}
 {% endblock %}
 {% block script %}
 {% endblock %}
