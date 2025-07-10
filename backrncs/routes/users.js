@@ -35,6 +35,7 @@ router.delete('/:id', async (req, res) => {
 router.put('/:id', async (req, res, next) => {
     try {
         const {id} = req.params;
+        const {nickname, email, password} = req.body;
         const updated = await User.findByIdAndUpdate(id, {nickname, email, password}, {new: true});
         return res.json(updated);
     } catch (e) {
