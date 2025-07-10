@@ -30,7 +30,16 @@ router.delete('/:id', async (req, res) => {
     } catch (e) {
         return res.status(500).json(e);
     }
+})
 
+router.put('/:id', async (req,res,next) => {
+    try {
+        const {id} = req.params;
+        const updated = await User.findByIdAndUpdate(id);
+        return res.json(updated);
+    } catch (e) {
+        return res.status(500).json(e);
+    }
 })
 
 module.exports = router;
