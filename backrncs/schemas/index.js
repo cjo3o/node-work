@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
+require("dotenv").config();
 
-const mongo_url ="mongodb+srv://cjo3o:sUpqvAbi6UMdOQlR@cluster0.9jmknoy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongo_url =process.env.MONGO_URL;
 
 const connect = ()=>{
     mongoose.connect(mongo_url,{ dbName:'rncs' })
