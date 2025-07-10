@@ -32,10 +32,10 @@ router.delete('/:id', async (req, res) => {
     }
 })
 
-router.put('/:id', async (req,res,next) => {
+router.put('/:id', async (req, res, next) => {
     try {
         const {id} = req.params;
-        const updated = await User.findByIdAndUpdate(id);
+        const updated = await User.findByIdAndUpdate(id, {nickname, email, password}, {new: true});
         return res.json(updated);
     } catch (e) {
         return res.status(500).json(e);
