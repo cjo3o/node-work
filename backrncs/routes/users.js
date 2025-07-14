@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../schemas/users');
+const bcrypt = require('bcrypt');
 
 router.post('/register', async (req, res, next) => {
     try {
         const {nickname, email, password} = req.body;
-        const user = new User({email, password, nickname});
+        const hashed = await bcrypt.hash(req.body.password, 12);
+        const user = new User({email, hashed, nickname});
         const result = await user.save();
         return res.json(result);
     } catch (e) {
